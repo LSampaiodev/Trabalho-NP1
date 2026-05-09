@@ -35,18 +35,18 @@ app.js      — Lógica do simulador
 
 O painel de controle deve permitir selecionar e executar estas operações:
 
-| Operação | Descrição |
-|---|---|
-| `LOAD_MEM` | Inserir um valor em um endereço específico da RAM |
+| Operação     | Descrição                                                                           |
+|--------------|-------------------------------------------------------------------------------------|
+| `LOAD_MEM`   | Inserir um valor em um endereço específico da RAM                                   |
 | `MEM_TO_REG` | Carregar valor da RAM para um registrador (passando pela cache, indicando hit/miss) |
-| `REG_TO_MEM` | Armazenar valor de um registrador na RAM |
-| `ADD` | Soma: selecionar 2 registradores de entrada e 1 de destino, calcular via ULA |
-| `SUB` | Subtração: mesmo formato do ADD |
-| `AND` | AND bit-a-bit via ULA |
-| `OR` | OR bit-a-bit via ULA |
-| `NOT` | Negação (complemento a 1) via ULA, sobre 1 registrador |
-| `SAVE_HD` | Gravar valor de um endereço RAM em um setor do HD |
-| `LOAD_HD` | Recuperar valor de um setor do HD para um endereço da RAM |
+| `REG_TO_MEM` | Armazenar valor de um registrador na RAM                                            |
+| `ADD`        | Soma: selecionar 2 registradores de entrada e 1 de destino, calcular via ULA        |
+| `SUB`        | Subtração: mesmo formato do ADD                                                     |
+| `AND`        | AND bit-a-bit via ULA                                                               |
+| `OR`         | OR bit-a-bit via ULA                                                                |
+| `NOT`        | Negação (complemento a 1) via ULA, sobre 1 registrador                              |
+| `SAVE_HD`    | Gravar valor de um endereço RAM em um setor do HD                                   |
+| `LOAD_HD`    | Recuperar valor de um setor do HD para um endereço da RAM                           |
 
 ## Comportamento Visual e Animações
 

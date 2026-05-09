@@ -50,7 +50,7 @@ A maioria dos computadores modernos segue a **Arquitetura de Von Neumann**, prop
 │  │ Controle     │  │  e Aritmética)         │   │
 │  └──────────────┘  └────────────────────────┘   │
 │  ┌──────────────────────────────────────────┐   │
-│  │         Registradores                     │   │
+│  │         Registradores                    │   │
 │  └──────────────────────────────────────────┘   │
 └────────────────────┬────────────────────────────┘
                      │ Barramentos
@@ -134,11 +134,11 @@ AND: 1 0 0 1
 ```
 
 | A | B | A AND B |
-|---|---|---|
-| 0 | 0 | 0 |
-| 0 | 1 | 0 |
-| 1 | 0 | 0 |
-| 1 | 1 | 1 |
+|---|---|---------|
+| 0 | 0 | 0       |
+| 0 | 1 | 0       |
+| 1 | 0 | 0       |
+| 1 | 1 | 1       |
 
 #### OR (OU lógico)
 Retorna 1 quando **pelo menos um** dos bits é 1.
@@ -150,11 +150,11 @@ Retorna 1 quando **pelo menos um** dos bits é 1.
 ```
 
 | A | B | A OR B |
-|---|---|---|
-| 0 | 0 | 0 |
-| 0 | 1 | 1 |
-| 1 | 0 | 1 |
-| 1 | 1 | 1 |
+|---|---|--------|
+| 0 | 0 | 0      |
+| 0 | 1 | 1      |
+| 1 | 0 | 1      |
+| 1 | 1 | 1      |
 
 #### NOT (Negação)
 Inverte cada bit: 0 vira 1 e 1 vira 0.
@@ -165,15 +165,15 @@ NOT A: 0 1 0 0
 ```
 
 | A | NOT A |
-|---|---|
-| 0 | 1 |
-| 1 | 0 |
+|---|-------|
+| 0 | 1     |
+| 1 | 0     |
 
 ### Como a ULA funciona no simulador:
 
 ```
 Registrador R0 (valor: 25) ──→ Entrada A ─┐
-                                           ├──→ ULA (ADD) ──→ Resultado: 42 ──→ R2
+                                          ├──→ ULA (ADD) ──→ Resultado: 42 ──→ R2
 Registrador R1 (valor: 17) ──→ Entrada B ─┘
 ```
 
@@ -237,13 +237,13 @@ CPU precisa do dado no endereço 0x04
          │
          ▼
     ┌─────────┐
-    │ Cache L1 │ ── Hit? ──→ SIM ──→ Retorna dado (1 ns)
+    │ Cache L1│ ── Hit? ──→ SIM ──→ Retorna dado (1 ns)
     └─────────┘        │
                        NÃO (Miss)
                        │
                        ▼
                   ┌─────────┐
-                  │   RAM    │ ──→ Busca dado (100 ns)
+                  │   RAM   │ ──→ Busca dado (100 ns)
                   └─────────┘     e copia para cache
 ```
 
@@ -325,7 +325,7 @@ O armazenamento secundário é onde os dados ficam **permanentemente**, mesmo qu
         ┌─────────────────┐
         │   Disco         │
         │   magnético     │
-        │     ◉           │  ← Pratos giratórios
+        │     ◉          │  ← Pratos giratórios
         │   girando       │
         │                 │
         │  ───── cabeça   │  ← Cabeça de leitura/escrita
@@ -352,11 +352,11 @@ O armazenamento secundário é onde os dados ficam **permanentemente**, mesmo qu
 
 ### Por que não usar só RAM?
 
-| Motivo | RAM | HD/SSD |
-|---|---|---|
-| Custo por GB | Caro (~R$ 15/GB) | Barato (~R$ 0,20/GB) |
-| Persistência | Perde dados ao desligar | Mantém dados |
-| Capacidade | Limitada (8-64 GB) | Grande (1-20 TB) |
+| Motivo       | RAM                     | HD/SSD              |
+|--------------|-------------------------|---------------------|
+| Custo por GB | Caro (~R$ 15/GB)        | Barato (~R$ 0,20/GB)|
+| Persistência | Perde dados ao desligar | Mantém dados        |
+| Capacidade   | Limitada (8-64 GB)      | Grande (1-20 TB)    |
 
 ---
 
@@ -584,23 +584,23 @@ Passo 8: Usuário recupera HD, Setor 0 → RAM[0x03]
        ▼
 ┌──────────────────────────────────┐
 │              CPU                 │
-│  ┌────────┐      ┌───────────┐  │
-│  │R0 = 25 │      │           │  │
-│  │R1 = 17 │─────→│ ULA: ADD  │  │  Passo 5
-│  │R2 = 42 │←─────│ 25+17=42  │  │
-│  └────────┘      └───────────┘  │
+│  ┌────────┐      ┌───────────┐   │
+│  │R0 = 25 │      │           │   │
+│  │R1 = 17 │─────→│ ULA: ADD  │   │  Passo 5
+│  │R2 = 42 │←─────│ 25+17=42  │   │
+│  └────────┘      └───────────┘   │
 └──────────────┬───────────────────┘
                │  Passo 6: Resultado → RAM
                ▼
 ┌──────────────┐
 │ RAM          │
-│ 0x02 = 42   │
+│ 0x02 = 42    │
 └──────┬───────┘
        │  Passo 7: Gravar no HD
        ▼
 ┌──────────────┐
 │ HD/SSD       │
-│ Setor 0 = 42│  ← Dado persistido!
+│ Setor 0 = 42 │  ← Dado persistido!
 └──────────────┘
 ```
 
