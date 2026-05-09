@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulador visual e interativo de Organização de Computadores — CPU, ULA, Registradores, Cache, RAM e HD/SSD">
+  <title>Simulador de Organização de Computadores</title>
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            surface: 'rgba(15,20,40,0.85)',
+            glass: 'rgba(25,35,65,0.55)',
+            'glass-border': 'rgba(100,140,255,0.18)',
+            neon: { blue: '#38bdf8', purple: '#818cf8', green: '#34d399', orange: '#fb923c', red: '#f87171', pink: '#f472b6', yellow: '#fbbf24' },
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#0a0e1a] text-slate-200 font-sans min-h-screen overflow-x-hidden">
+
+<!-- Fundo gradiente sutil -->
+<div class="fixed inset-0 pointer-events-none z-0
+  bg-[radial-gradient(ellipse_at_20%_0%,rgba(56,189,248,0.07),transparent_60%),radial-gradient(ellipse_at_80%_100%,rgba(129,140,248,0.07),transparent_60%)]"></div>
+
+<!-- ===== HEADER ===== -->
+<header id="header" class="relative z-10 flex items-center justify-between px-6 py-3.5
+  bg-surface border-b border-glass-border backdrop-blur-xl">
+  <h1 class="text-xl font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+    🖥️ Simulador de Organização de Computadores
+  </h1>
+  <div id="clock-badge" class="font-mono text-sm px-4 py-1 rounded-full
+    bg-neon-blue/10 border border-neon-blue/25 text-neon-blue">
+    Ciclo: <span id="clock-count">0</span>
+  </div>
+</header>
+
+<!-- ===== APP ===== -->
+<main id="app" class="relative z-10 grid grid-cols-[1fr_340px] gap-3 p-3 h-[calc(100vh-56px)]">
+
+  <!-- ===== DIAGRAMA DOS COMPONENTES ===== -->
+  <section id="diagram-area" class="grid grid-cols-2 auto-rows-auto gap-3 overflow-y-auto pr-1">
+
+    <!-- CPU (ocupa 2 colunas) -->
+    <div id="cpu" class="comp col-span-2 border-[1.5px] border-neon-purple/25 bg-[rgba(20,25,50,0.7)] rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+      <div class="comp-title text-neon-purple"><span class="icon">⚙️</span> CPU — Unidade Central de Processamento</div>
+      <div id="cpu-inner" class="grid grid-cols-2 gap-3">
+
+        <!-- Registradores -->
+        <div id="registers" class="comp bg-glass border border-glass-border rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+          <div class="comp-title"><span class="icon">📦</span> Registradores</div>
+          <div class="reg-grid grid grid-cols-2 gap-1.5">
+            <div class="reg-cell flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[.04] border border-white/[.06] font-mono text-sm transition-all duration-300" data-reg="R0">
+              <span class="reg-name text-neon-blue font-semibold">R0</span><span class="reg-val" id="reg-R0">0</span>
+            </div>
+            <div class="reg-cell flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[.04] border border-white/[.06] font-mono text-sm transition-all duration-300" data-reg="R1">
+              <span class="reg-name text-neon-blue font-semibold">R1</span><span class="reg-val" id="reg-R1">0</span>
+            </div>
+            <div class="reg-cell flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[.04] border border-white/[.06] font-mono text-sm transition-all duration-300" data-reg="R2">
+              <span class="reg-name text-neon-blue font-semibold">R2</span><span class="reg-val" id="reg-R2">0</span>
+            </div>
+            <div class="reg-cell flex items-center justify-between px-3 py-1.5 rounded-lg bg-white/[.04] border border-white/[.06] font-mono text-sm transition-all duration-300" data-reg="R3">
+              <span class="reg-name text-neon-blue font-semibold">R3</span><span class="reg-val" id="reg-R3">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ULA -->
+        <div id="ula" class="comp bg-glass border border-glass-border rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+          <div class="comp-title"><span class="icon">🔢</span> ULA — Unidade Lógica e Aritmética</div>
+          <div id="ula-display" class="text-center p-3 rounded-lg bg-white/[.03] border border-white/[.06]">
+            <div id="ula-op" class="text-2xl font-bold text-neon-green font-mono">—</div>
+            <div id="ula-inputs" class="flex justify-around mt-2 font-mono text-sm text-slate-400">
+              <span>A: <span id="ula-a">—</span></span>
+              <span>B: <span id="ula-b">—</span></span>
+            </div>
+            <div id="ula-result" class="mt-1.5 font-mono text-base text-neon-yellow font-semibold">Resultado: —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barramento CPU ↔ Cache -->
+    <div class="bus-arrow col-span-2 flex items-center justify-center py-1 opacity-50 transition-all duration-300" id="bus-cpu-cache">
+      <span class="bus-label font-mono text-[0.6rem] uppercase tracking-widest text-center px-3 py-0.5 rounded bg-neon-blue/[.06] text-slate-400">
+        ▼ Barramento de Dados / Endereços ▼
+      </span>
+    </div>
+
+    <!-- Cache -->
+    <div id="cache" class="comp bg-glass border border-neon-yellow/20 rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+      <div class="comp-title text-neon-yellow"><span class="icon">⚡</span> Memória Cache (L1)</div>
+      <table class="mem-table w-full border-collapse font-mono text-xs">
+        <thead><tr>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Linha</th>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">End.</th>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Valor</th>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Status</th>
+        </tr></thead>
+        <tbody id="cache-body">
+          <tr data-cache="0"><td class="mem-addr px-2 py-1 border-b border-white/[.03] text-neon-orange font-medium">0</td><td class="cache-tag px-2 py-1 border-b border-white/[.03]">—</td><td class="mem-val px-2 py-1 border-b border-white/[.03]">—</td><td class="px-2 py-1 border-b border-white/[.03]"><span class="cache-status text-[0.65rem] px-1.5 py-0.5 rounded">vazio</span></td></tr>
+          <tr data-cache="1"><td class="mem-addr px-2 py-1 border-b border-white/[.03] text-neon-orange font-medium">1</td><td class="cache-tag px-2 py-1 border-b border-white/[.03]">—</td><td class="mem-val px-2 py-1 border-b border-white/[.03]">—</td><td class="px-2 py-1 border-b border-white/[.03]"><span class="cache-status text-[0.65rem] px-1.5 py-0.5 rounded">vazio</span></td></tr>
+          <tr data-cache="2"><td class="mem-addr px-2 py-1 border-b border-white/[.03] text-neon-orange font-medium">2</td><td class="cache-tag px-2 py-1 border-b border-white/[.03]">—</td><td class="mem-val px-2 py-1 border-b border-white/[.03]">—</td><td class="px-2 py-1 border-b border-white/[.03]"><span class="cache-status text-[0.65rem] px-1.5 py-0.5 rounded">vazio</span></td></tr>
+          <tr data-cache="3"><td class="mem-addr px-2 py-1 border-b border-white/[.03] text-neon-orange font-medium">3</td><td class="cache-tag px-2 py-1 border-b border-white/[.03]">—</td><td class="mem-val px-2 py-1 border-b border-white/[.03]">—</td><td class="px-2 py-1 border-b border-white/[.03]"><span class="cache-status text-[0.65rem] px-1.5 py-0.5 rounded">vazio</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RAM -->
+    <div id="ram" class="comp bg-glass border border-neon-blue/20 rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+      <div class="comp-title"><span class="icon">🧠</span> Memória RAM</div>
+      <div class="max-h-[220px] overflow-y-auto">
+        <table class="mem-table w-full border-collapse font-mono text-xs">
+          <thead><tr>
+            <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">End.</th>
+            <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Valor</th>
+          </tr></thead>
+          <tbody id="ram-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Barramento RAM ↔ HD -->
+    <div class="bus-arrow col-span-2 flex items-center justify-center py-1 opacity-50 transition-all duration-300" id="bus-ram-hd">
+      <span class="bus-label font-mono text-[0.6rem] uppercase tracking-widest text-center px-3 py-0.5 rounded bg-neon-blue/[.06] text-slate-400">
+        ▼ Barramento de Armazenamento ▼
+      </span>
+    </div>
+
+    <!-- HD/SSD -->
+    <div id="hd" class="comp col-span-2 bg-glass border border-neon-red/20 rounded-xl p-4 backdrop-blur-lg transition-all duration-300">
+      <div class="comp-title text-neon-red"><span class="icon">💾</span> HD / SSD — Armazenamento Secundário</div>
+      <table class="mem-table w-full border-collapse font-mono text-xs">
+        <thead><tr>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Setor</th>
+          <th class="text-left px-2 py-1 text-slate-400 font-medium text-[0.65rem] uppercase tracking-wider border-b border-white/[.06]">Dado</th>
+        </tr></thead>
+        <tbody id="hd-body"></tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ===== SIDEBAR: CONTROLES + LOG ===== -->
+  <aside id="sidebar" class="flex flex-col gap-3 overflow-y-auto">
+
+    <!-- Controles -->
+    <div id="controls" class="comp bg-glass border border-glass-border rounded-xl p-4 backdrop-blur-lg">
+      <div class="comp-title text-neon-green"><span class="icon">🎮</span> Painel de Controle</div>
+
+      <label for="sel-op" class="block text-xs font-medium text-slate-400 mt-2 mb-1">Operação</label>
+      <select id="sel-op" class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-200 font-mono text-sm outline-none focus:border-neon-blue transition-colors">
+        <optgroup label="Memória">
+          <option value="LOAD_MEM">Inserir valor na RAM</option>
+          <option value="MEM_TO_REG">RAM → Registrador</option>
+          <option value="REG_TO_MEM">Registrador → RAM</option>
+        </optgroup>
+        <optgroup label="Aritméticas (ULA)">
+          <option value="ADD">Soma (ADD)</option>
+          <option value="SUB">Subtração (SUB)</option>
+        </optgroup>
+        <optgroup label="Lógicas (ULA)">
+          <option value="AND">AND (E lógico)</option>
+          <option value="OR">OR (OU lógico)</option>
+          <option value="NOT">NOT (Negação)</option>
+        </optgroup>
+        <optgroup label="HD / SSD">
+          <option value="SAVE_HD">RAM → HD (Gravar)</option>
+          <option value="LOAD_HD">HD → RAM (Recuperar)</option>
+        </optgroup>
+      </select>
+
+      <!-- Campos dinâmicos preenchidos pelo JS -->
+      <div id="dyn-fields"></div>
+
+      <div class="flex gap-1.5 mt-3 flex-wrap">
+        <button class="btn btn-primary flex-1 min-w-[80px] px-3 py-2 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200
+          bg-gradient-to-r from-neon-blue to-neon-purple text-white hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neon-blue/30
+          disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-1" id="btn-exec" title="Executar passo a passo">
+          ▶ Passo a Passo
+        </button>
+        <button class="btn btn-success flex-1 min-w-[80px] px-3 py-2 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200
+          bg-gradient-to-r from-neon-green to-teal-400 text-[#0a0e1a] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neon-green/30
+          disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-1" id="btn-auto" title="Executar automaticamente">
+          ⏩ Automático
+        </button>
+      </div>
+
+      <div class="flex gap-1.5 mt-1.5 flex-wrap">
+        <button class="btn flex-1 min-w-[80px] px-3 py-2 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200
+          bg-white/[.07] text-slate-400 border border-white/10 hover:bg-white/[.12] hover:text-slate-200
+          flex items-center justify-center gap-1" id="btn-reset" title="Resetar simulador">
+          🔄 Resetar
+        </button>
+        <button class="btn flex-1 min-w-[80px] px-3 py-2 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200
+          bg-neon-red/[.15] text-neon-red border border-neon-red/20 hover:bg-neon-red/25
+          flex items-center justify-center gap-1" id="btn-clear-log" title="Limpar log">
+          🗑️ Limpar Log
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 mt-2.5 text-xs text-slate-400">
+        <span>Velocidade:</span>
+        <input type="range" id="speed-range" min="100" max="2000" value="700" step="100" class="flex-1 accent-neon-blue">
+        <span id="speed-label">700ms</span>
+      </div>
+    </div>
+
+    <!-- Saída/Resultado -->
+    <div id="output" class="comp bg-glass border border-glass-border rounded-xl p-4 backdrop-blur-lg max-h-[120px]">
+      <div class="comp-title text-neon-yellow"><span class="icon">📤</span> Resultado</div>
+      <div id="output-content" class="font-mono text-base p-3 rounded-lg bg-neon-yellow/5 border border-neon-yellow/[.12] min-h-[40px] text-neon-yellow font-semibold text-center">—</div>
+    </div>
+
+    <!-- Log -->
+    <div id="log" class="comp bg-glass border border-glass-border rounded-xl p-4 backdrop-blur-lg flex-1 min-h-0 flex flex-col">
+      <div class="comp-title text-neon-pink"><span class="icon">📝</span> Log de Operações</div>
+      <div id="log-content" class="flex-1 overflow-y-auto font-mono text-[0.78rem] leading-relaxed py-1"></div>
+    </div>
+
+  </aside>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

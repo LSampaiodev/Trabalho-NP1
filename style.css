@@ -1,0 +1,148 @@
+/* ===== ESTILOS COMPLEMENTARES AO TAILWIND =====
+   Apenas animações, estados dinâmicos (.active) e estilos
+   que o Tailwind CDN não cobre diretamente.
+============================================== */
+
+/* Título de componente */
+.comp-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8892a8;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== ESTADOS ATIVOS (JavaScript) ===== */
+.comp.active {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 20px rgba(56, 189, 248, 0.05);
+}
+
+.reg-cell.active {
+  background: rgba(56, 189, 248, 0.12) !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+#ula.active #ula-display {
+  background: rgba(52, 211, 153, 0.1) !important;
+  border-color: #34d399 !important;
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.25);
+}
+
+.mem-table tr.active td {
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+}
+
+.bus-arrow.active {
+  opacity: 1 !important;
+  color: #38bdf8;
+  animation: busPulse 1s ease infinite;
+}
+
+/* ===== CACHE STATUS BADGES ===== */
+.cache-hit {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+.cache-miss {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+/* ===== DATA PACKET (animação de dados viajando) ===== */
+.data-packet {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #38bdf8, rgba(56, 189, 248, 0.3));
+  box-shadow: 0 0 18px #38bdf8, 0 0 36px rgba(56, 189, 248, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* ===== LOG ENTRIES ===== */
+.log-entry {
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  border-left: 3px solid transparent;
+  animation: fadeIn 0.3s ease;
+  font-size: 0.78rem;
+}
+.log-entry.info   { border-left-color: #38bdf8; background: rgba(56, 189, 248, 0.04); }
+.log-entry.success{ border-left-color: #34d399; background: rgba(52, 211, 153, 0.04); }
+.log-entry.warn   { border-left-color: #fbbf24; background: rgba(251, 191, 60, 0.04); }
+.log-entry.step   { border-left-color: #818cf8; background: rgba(129, 140, 248, 0.04); }
+.log-step-num { color: #818cf8; font-weight: 600; margin-right: 4px; }
+
+/* ===== CAMPOS DINÂMICOS (gerados pelo JS) ===== */
+#dyn-fields label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8892a8;
+  margin: 8px 0 4px;
+}
+#dyn-fields select,
+#dyn-fields input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#dyn-fields select:focus,
+#dyn-fields input:focus {
+  border-color: #38bdf8;
+}
+#dyn-fields select option {
+  background: #1a1f35;
+  color: #e2e8f0;
+}
+.dyn-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes busPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 900px) {
+  #app { grid-template-columns: 1fr !important; height: auto !important; }
+  #diagram-area { min-height: 60vh; }
+  #sidebar { max-height: 50vh; }
+}
